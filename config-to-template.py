@@ -41,7 +41,7 @@ parser.add_argument('config',
 parser.add_argument('-i', '--indent',
                     type=int,
                     default=4,
-                    help='Set indent for JSON file, for one=line set to -1')
+                    help='Set indent for JSON file, for one line set to -1')
 parser.add_argument('-v', '--verbose',
                     action='store_true',
                     help='Set logging level to DEBUG')
