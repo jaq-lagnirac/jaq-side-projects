@@ -38,6 +38,10 @@ parser = argparse.ArgumentParser(description=DESCRIPTION, epilog=EPILOG,
 
 parser.add_argument('config',
                     help='.json file to be converted')
+parser.add_argument('-i', '--indent',
+                    type=int,
+                    default=4,
+                    help='Set indent for JSON file, for one=line set to -1')
 parser.add_argument('-v', '--verbose',
                     action='store_true',
                     help='Set logging level to DEBUG')
@@ -83,7 +87,11 @@ template_name = basename.replace(extension, f'.template{extension}')
 
 # creates new template json file
 with open(template_name, 'w') as template:
-  template.write(json.dumps(config_dict, indent = 4))
+  indent = args.indent
+  if indent > 0: # prints with indent
+    template.write(json.dumps(config_dict, indent = args.indent))
+  else: # one single line
+    template.write(json.dumps(config_dict))
 
 
 debug('%s end', SCRIPT_PATH)
