@@ -42,6 +42,9 @@ parser.add_argument('-i', '--indent',
                     type=int,
                     default=4,
                     help='Set indent for JSON file, for one line set to -1')
+parser.add_argument('-o', '--output-dir',
+                    default='.',
+                    help='Set output directory')
 parser.add_argument('-v', '--verbose',
                     action='store_true',
                     help='Set logging level to DEBUG')
@@ -64,6 +67,11 @@ def extract_type(value):
 debug('%s begin', SCRIPT_PATH)
 
 
+# ensures output dir valid, exits program otherwise
+if not os.path.exists(args.output_dir):
+  error(f'Output directory does not exist - {args.output_dir}')
+  sys.exit(1)
+
 # opens template file into dict
 with open(args.config, 'r') as config:
   config_dict = json.loads(config.read())
@@ -83,10 +91,19 @@ basename = os.path.basename(args.config)
 extension_indx = basename.rindex('.')
 extension = basename[extension_indx : ]
 debug(f'Extension - {extension}')
+# generates new file name
 template_name = basename.replace(extension, f'.template{extension}')
+info(f'Filename generated - {template_name}')
+# generates full path
+template_path = os.path.join(args.output_dir, template_name)
+info(f'File path generated - {template_path}')
+
+# checks if config file exists in template_path, notifies user
+if os.path.exists(template_path):
+  info('Template config file already exists. Overwriting.')
 
 # creates new template json file
-with open(template_name, 'w') as template:
+with open(template_path, 'w') as template:
   indent = args.indent
   if indent > 0: # prints with indent
     template.write(json.dumps(config_dict, indent = args.indent))
