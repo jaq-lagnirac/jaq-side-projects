@@ -20,10 +20,8 @@ debug = l.debug; info = l.info; warning = l.warning; error = l.error
 DESCRIPTION = '''
 
 A tool to take a config.json file and outputs a template
-
 JSON file that takes out all of the sensitive information
-
-and replaces it with data types. Works with any JSON file
+and replaces it with data types. Works with any JSON file.
 
 '''
 
@@ -44,7 +42,10 @@ parser.add_argument('-i', '--indent',
                     help='Set indent for JSON file, for one line set to -1')
 parser.add_argument('-o', '--output-dir',
                     default='.',
-                    help='Set output directory')
+                    help='Set output directory, defaults to current working directory')
+parser.add_argument('-f', '--force',
+                    action='store_true',
+                    help='Forces overwrite of template if file already exists')
 parser.add_argument('-v', '--verbose',
                     action='store_true',
                     help='Set logging level to DEBUG')
@@ -55,8 +56,14 @@ if args.verbose:
   l.setLevel(logging.DEBUG)
 
 
-# extracts variable type
+def force_exit(msg):
+  '''Shortcut for exception handling message'''
+  error(msg)
+  info('Exiting program.')
+  sys.exit(1)
+
 def extract_type(value):
+  '''Extracts variable type'''
   var_type = str(type(value))
   start_indx = var_type.index('\'') + 1 # finds first '
   end_indx = var_type.index('\'', start_indx) # finds second '
@@ -69,8 +76,7 @@ debug('%s begin', SCRIPT_PATH)
 
 # ensures output dir valid, exits program otherwise
 if not os.path.exists(args.output_dir):
-  error(f'Output directory does not exist - {args.output_dir}')
-  sys.exit(1)
+  force_exit(f'Output directory does not exist: {args.output_dir}')
 
 # opens template file into dict
 with open(args.config, 'r') as config:
@@ -93,14 +99,19 @@ extension = basename[extension_indx : ]
 debug(f'Extension - {extension}')
 # generates new file name
 template_name = basename.replace(extension, f'.template{extension}')
-info(f'Filename generated - {template_name}')
+info(f'Filename generated: {template_name}')
 # generates full path
 template_path = os.path.join(args.output_dir, template_name)
-info(f'File path generated - {template_path}')
+info(f'File path generated: {template_path}')
 
 # checks if config file exists in template_path, notifies user
-if os.path.exists(template_path):
+path_exists = os.path.exists(template_path)
+if not args.force and path_exists:
+  force_exit('Template config file already exists. Use --force to overwrite existing file.')
+elif path_exists: # force flag used
   info('Template config file already exists. Overwriting.')
+else: # path does not exist
+  info('Creating new template config file.')
 
 # creates new template json file
 with open(template_path, 'w') as template:
@@ -109,6 +120,8 @@ with open(template_path, 'w') as template:
     template.write(json.dumps(config_dict, indent = args.indent))
   else: # one single line
     template.write(json.dumps(config_dict))
+
+info('Template file created. Info dumped.')
 
 
 debug('%s end', SCRIPT_PATH)
