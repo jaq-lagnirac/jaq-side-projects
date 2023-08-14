@@ -35,22 +35,32 @@ parser = argparse.ArgumentParser(description=DESCRIPTION, epilog=EPILOG,
   formatter_class=CustomFormatter)
 
 parser.add_argument('config',
+                    nargs='?', # mainly for use with --path flag
                     help='.json file to be converted')
 parser.add_argument('-i', '--indent',
                     type=int,
                     default=4,
                     help='Set indent for JSON file, for one line set to -1')
 parser.add_argument('-o', '--output-dir',
-                    default='.',
+                    default=os.getcwd(),
                     help='Set output directory, defaults to current working directory')
 parser.add_argument('-f', '--force',
                     action='store_true',
-                    help='Forces overwrite of template if file already exists')
+                    help='Force overwrite of template if file already exists')
+parser.add_argument('--path',
+                    action='store_true',
+                    help='Display path to this script, exits program (does not create template).')
 parser.add_argument('-v', '--verbose',
                     action='store_true',
                     help='Set logging level to DEBUG')
 
 args = parser.parse_args()
+
+if args.path:
+  script_location = os.path.abspath(__file__)
+  info(f'Path of script: {script_location}')
+  info('Exiting program.')
+  sys.exit()
 
 if args.verbose:
   l.setLevel(logging.DEBUG)
@@ -73,6 +83,10 @@ def extract_type(value):
 
 debug('%s begin', SCRIPT_PATH)
 
+
+# checks if file is given
+if args.config is None:
+  force_exit('No JSON file is given.')
 
 # ensures output dir valid, exits program otherwise
 if not os.path.exists(args.output_dir):
