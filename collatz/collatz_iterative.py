@@ -1,8 +1,17 @@
 # Justin Caringal
 # an iterative implementation of the collatz conjecture
 
-def main():
-    """ THE MAIN FUNCTION """
+def get_user_input():
+    """Gets user input
+    
+    A function to organize user input and validation
+
+    Args:
+        None
+
+    Returns:
+        int: Returns the number to be used in the conjecture
+    """
 
     # bool flag to ask for inputs
     is_int = False
@@ -19,6 +28,13 @@ def main():
             continue
 
         is_int = True # is ignored if exception handling sends loop to top
+
+    return manipulated_num
+
+def main():
+    """ THE MAIN FUNCTION """
+
+    manipulated_num = get_user_input()
 
     # implements iteration counter (the number of
     # operations performed before reaching 1)
