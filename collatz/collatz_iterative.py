@@ -1,6 +1,7 @@
 # Justin Caringal
 # an iterative implementation of the collatz conjecture
 
+
 def get_user_input():
     """Gets user input
     
@@ -31,10 +32,19 @@ def get_user_input():
 
     return manipulated_num
 
-def main():
-    """ THE MAIN FUNCTION """
 
-    manipulated_num = get_user_input()
+def collatz_iterative(manipulated_num):
+    """Implements collatz
+    
+    A function that implements an iterative implementation
+    of the collatz conjecture
+    
+    Args:
+        manipulated_num (int): A user-defined number
+        
+    Returns:
+        int: returns the number of operations performed
+    """
 
     # implements iteration counter (the number of
     # operations performed before reaching 1)
@@ -55,6 +65,16 @@ def main():
         manipulated_num = int(manipulated_num)
 
         print(manipulated_num)
+    
+    return counter
+
+
+def main():
+    """ THE MAIN FUNCTION """
+
+    manipulated_num = get_user_input()
+
+    counter = collatz_iterative(manipulated_num)
 
     if counter == 1:
         print('It took 1 iteration to reach 1.')
@@ -62,6 +82,7 @@ def main():
         print(f'It took {counter} iterations to reach 1.')
     
     print('Exiting program.')
+
 
 if __name__ == '__main__':
     main()
