@@ -1,5 +1,5 @@
 # Justin Caringal
-# an iterative implementation of the collatz conjecture
+# a recursive implementation of the collatz conjecture
 
 DESCRIPTION = '''\t\t---Collatz Conjecture---
 
@@ -10,7 +10,7 @@ Under the rules
 \t-If the number is odd, triple it and add one
 will every positive integer eventually transform into 1?
 
-Iterative Python implementation.
+Recursive Python implementation.
 
 '''
 
@@ -45,14 +45,47 @@ def get_user_input():
     return manipulated_num
 
 
-def collatz_iterative(manipulated_num):
-    """Implements collatz
+def collatz_recursive(num, counter):
+    """Primary conjecture function
     
-    A function that implements an iterative implementation
-    of the collatz conjecture
+    The main function that performs the
+    conjecture's operations, recursive
     
     Args:
-        manipulated_num (int): A user-defined number
+        num: the input number which operations will be performed on
+        counter: the a totalling of the number of iterations performed
+        
+    Returns:
+        int: The number of operations performed
+    """
+
+    # truncates posibility of floats into an int
+    num = int(num)
+
+    # base case, ends recursion
+    if num == 1:
+        return counter
+    
+    counter += 1
+    print(f'{counter : <5}{num}')
+
+    # performs conjecture arthimetic
+    if num % 2 == 0: # even
+        num /= 2
+    else: # odd
+        num = (3 * num) + 1
+
+    # sends recursion down the line
+    return collatz_recursive(num, counter)
+
+
+def collatz_driver(seed):
+    """Collatz driver function
+    
+    A driver function to organize the recursive functions
+    
+    Args:
+        seed (int): the starting number for the conjecture
         
     Returns:
         int: returns the number of operations performed
@@ -62,23 +95,9 @@ def collatz_iterative(manipulated_num):
     # operations performed before reaching 1)
     counter = 0
 
-    # main driving loop
-    while manipulated_num != 1:
-        
-        # increments counter
-        counter += 1
-
-        if manipulated_num % 2 == 0: # even
-            manipulated_num /= 2
-        else: # odd
-            manipulated_num = (3 * manipulated_num) + 1
-        
-        # truncates posibility of floats into an int
-        manipulated_num = int(manipulated_num)
-
-        print(f'{counter : <5}{manipulated_num}')
-    
-    return counter
+    # calculates iterations performed, performs conjecture operations
+    iterations_performed = collatz_recursive(seed, counter)
+    return iterations_performed
 
 
 def main():
@@ -89,13 +108,12 @@ def main():
     # input num
     manipulated_num = get_user_input()
 
-    # main driver function for collatz
-    counter = collatz_iterative(manipulated_num)
+    iterations_performed = collatz_driver(manipulated_num)
 
-    if counter == 1:
+    if iterations_performed == 1:
         print('It took 1 iteration to reach 1.')
     else:
-        print(f'It took {counter} iterations to reach 1.')
+        print(f'It took {iterations_performed} iterations to reach 1.')
     
     print('Exiting program.')
 
