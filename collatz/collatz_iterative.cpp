@@ -2,6 +2,7 @@
 // an iterative implementation of the collatz conjecture
 
 #include <iostream>
+#include <iomanip>
 #include <string>
 
 using namespace std;
@@ -26,15 +27,39 @@ bool check_int(string input);
 /**
  * @brief Get the user input and validates input
  * 
- * @return int : the user-defined value that will be used for the conjecture
+ * @return int the user-defined value that will be used for the conjecture
  */
 int get_user_input();
 
 
+/**
+ * @brief Performs the collatz conjecture on input num
+ * 
+ * @param input_num the starting number for the conjecture
+ * @return unsigned the number of operations performed to reach 1
+ */
+unsigned collatz_iterative(int input_num);
+
+
 int main()
 {
-    cout << DESCRIPTION;
-    int test = get_user_input();
+    std::cout << DESCRIPTION;
+    
+    // user input for num
+    int input_num = get_user_input();
+
+    // main driver function for collatz
+    unsigned iteration_count = collatz_iterative(input_num);
+
+    if (iteration_count == 1)
+    {
+        std::cout << "It took 1 iteration to reach 1." << endl;
+    }
+    else
+    {
+        std::cout << "It took " << iteration_count << " iterations to reach 1." << endl;
+    }
+    std::cout << "Exiting program.";
 }
 
 
@@ -65,11 +90,34 @@ int get_user_input()
     while (!check_int(input_num))
     {
         // prompts user to give input
-        cout << "Give me an integer: ";
+        std::cout << "Give me an integer: ";
         cin >> input_num;
     }
 
+    // coverts str to int and returns
     int cleaned_input = stoi(input_num);
-    cout << cleaned_input << " success!";
     return cleaned_input;
+}
+
+
+unsigned collatz_iterative(int input_num)
+{
+    unsigned counter = 0;
+
+    while (input_num != 1)
+    {
+        counter++;
+        if (input_num % 2 == 0) // even
+        {
+            input_num /= 2;
+        }
+        else // odd
+        {
+            input_num = (3 * input_num) + 1;
+        }
+
+        std::cout << left << setw(5) << counter << input_num << endl;
+    }
+
+    return counter;
 }
