@@ -8,7 +8,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-# based off of https://medium.com/@nithishreddy0627/a-beginners-guide-to-image-scraping-with-python-and-selenium-38ec419be5ff
+# based off of
+# https://medium.com/@nithishreddy0627/a-beginners-guide-to-image-scraping-with-python-and-selenium-38ec419be5ff
 
 driver = Chrome()
 url = 'https://www.star-registration.com/blogs/constellations-and-zodiac-signs/an-overview-of-all-88-constellations'
@@ -27,10 +28,10 @@ for index, (image, name) in enumerate(zip(img_elements, name_elements)):
     try:
         # finds image url
         img_url = image.get_attribute("src")
-        start_str = 'files/'
-        start_index = img_url.index(start_str) + len(start_str) + 3
-        end_str = '?'
-        end_index = img_url.index(end_str)
+        # start_str = 'files/'
+        # start_index = img_url.index(start_str) + len(start_str) + 3
+        # end_str = '?'
+        # end_index = img_url.index(end_str)
         # img_name = img_url[start_index : end_index]
         img_name = name.text
         number = str(index + 1).zfill(2)
