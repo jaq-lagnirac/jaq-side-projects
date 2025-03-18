@@ -25,8 +25,7 @@ while True:
         break
 
     elif option == 1:
-        user_input = input('Input alphabet-binary string: ')
-        user_input.upper()
+        user_input = input('Input alphabet-binary string: ').lower()
         for i, _ in enumerate(user_input):
             if user_input[i:i+4] == 'zero':
                 output += '0'
