@@ -22,19 +22,15 @@ driver.get(url)
 
 # ensures existence of user account
 try:
-    XPATH_404 = '//img[@alt="404 “This is not the web page you are looking for”"]'
-    WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, XPATH_404)))
-    find_404 = driver.find_element(By.XPATH, XPATH_404)
-    print(f'{account_name} does not exist.')
+    # finds repository names
+    REPO_XPATH = '//a[@itemprop="name codeRepository"]'
+    WebDriverWait(driver, 5).until(EC.presence_of_all_elements_located((By.XPATH, REPO_XPATH)))
+    extracted_repos = driver.find_elements(By.XPATH, REPO_XPATH)
+    print(f'{account_name} found, processing repositories.')
+except TimeoutException as e:
+    print(f'Account \"{account_name}\" does not exist.')
     driver.quit()
     sys.exit()
-except TimeoutException as e:
-    print(f'{account_name} found, processing repositories.')
-
-# finds repository names
-REPO_XPATH = '//a[@itemprop="name codeRepository"]'
-WebDriverWait(driver, 5).until(EC.presence_of_all_elements_located((By.XPATH, REPO_XPATH)))
-extracted_repos = driver.find_elements(By.XPATH, REPO_XPATH)
 
 # extracts repository name and link
 repo_list = []
